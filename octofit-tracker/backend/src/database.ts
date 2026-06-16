@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const connectDatabase = async () => {
-  await mongoose.connect('mongodb://localhost:27017/octofit_db');
+  await mongoose.connect("mongodb://localhost:27017/octofit_db");
 };
 
 export default connectDatabase;
