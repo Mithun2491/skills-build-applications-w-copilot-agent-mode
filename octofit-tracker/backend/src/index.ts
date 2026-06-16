@@ -1,10 +1,10 @@
 import express from 'express';
-import connectDatabase from './database.js';
-import usersRouter from './routes/users.js';
-import teamsRouter from './routes/teams.js';
-import activitiesRouter from './routes/activities.js';
-import workoutsRouter from './routes/workouts.js';
-import leaderboardRouter from './routes/leaderboard.js';
+import connectDatabase from './config/database.ts';
+import usersRouter from './routes/users.ts';
+import teamsRouter from './routes/teams.ts';
+import activitiesRouter from './routes/activities.ts';
+import workoutsRouter from './routes/workouts.ts';
+import leaderboardRouter from './routes/leaderboard.ts';
 
 const app = express();
 const PORT = Number(process.env.PORT || 8000);
@@ -29,8 +29,17 @@ async function startServer() {
   try {
     await connectDatabase();
     console.log('MongoDB connected.');
-    app.listen(PORT, () => {
-      console.log(`Backend listening on http://localhost:${PORT}`);
+
+    const codespaceName = process.env.CODESPACE_NAME;
+    const host = '0.0.0.0';
+    const localUrl = `http://localhost:${PORT}`;
+    const codespacesUrl = codespaceName ? `https://${codespaceName}-${PORT}.app.github.dev` : null;
+
+    app.listen(PORT, host, () => {
+      console.log(`Backend listening on ${localUrl}`);
+      if (codespacesUrl) {
+        console.log(`Codespaces URL: ${codespacesUrl}`);
+      }
     });
   } catch (error) {
     console.error('Failed to start backend', error);

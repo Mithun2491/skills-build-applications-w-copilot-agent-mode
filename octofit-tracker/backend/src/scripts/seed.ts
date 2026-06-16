@@ -1,16 +1,17 @@
-import mongoose from 'mongoose';
-import User from '../models/User.js';
-import Team from '../models/Team.js';
-import Activity from '../models/Activity.js';
-import Workout from '../models/Workout.js';
-import Leaderboard from '../models/Leaderboard.js';
-
 /**
- * Seed the octofit_db database with test data.
+ * Seed the octofit_db database with test data
  */
-async function seed() {
-  await mongoose.connect('mongodb://localhost:27017/octofit_db');
-  console.log('Connected to MongoDB for seeding');
+import mongoose from 'mongoose';
+import User from '../models/User.ts';
+import Team from '../models/Team.ts';
+import Activity from '../models/Activity.ts';
+import Workout from '../models/Workout.ts';
+import Leaderboard from '../models/Leaderboard.ts';
+
+const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
+
+async function seedDatabase() {
+  await mongoose.connect(mongodbUri);
 
   await Promise.all([
     User.deleteMany({}),
@@ -21,41 +22,40 @@ async function seed() {
   ]);
 
   const users = await User.create([
-    { name: 'Ava Brooks', email: 'ava@example.com', roles: ['member'] },
-    { name: 'Noah Patel', email: 'noah@example.com', roles: ['member'] },
-    { name: 'Maya Chen', email: 'maya@example.com', roles: ['coach'] },
+    { name: 'Ava Brooks', email: 'ava.brooks@example.com', roles: ['member'] },
+    { name: 'Noah Patel', email: 'noah.patel@example.com', roles: ['member'] },
+    { name: 'Maya Chen', email: 'maya.chen@example.com', roles: ['coach'] },
   ]);
 
-  const teams = await Team.create([
-    { name: 'Sprint Squad', description: 'Fast-paced athletes', members: [users[0]._id, users[1]._id] },
-    { name: 'Zen Fit', description: 'Balance and mobility team', members: [users[2]._id] },
+  const teams = await Team.insertMany([
+    { name: 'Sprint Squad', description: 'High-energy pace team', members: [users[0]._id.toString(), users[1]._id.toString()] },
+    { name: 'Zen Fit', description: 'Recovery and flexibility focus', members: [users[2]._id.toString()] },
   ]);
 
-  await Promise.all([
-    Workout.create({ name: 'Morning Energy Blast', description: 'A quick full-body circuit for energy.', difficulty: 'medium', durationMinutes: 30, tags: ['circuit', 'full-body', 'morning'] }),
-    Workout.create({ name: 'Core Strength Builder', description: 'Focused core and stability routine.', difficulty: 'hard', durationMinutes: 45, tags: ['core', 'strength'] }),
-    Workout.create({ name: 'Recovery Stretch Flow', description: 'Gentle stretch sequence to recover.', difficulty: 'easy', durationMinutes: 20, tags: ['stretch', 'recovery'] }),
+  await Workout.create([
+    { name: 'Morning Energy Blast', description: 'Full body warmup and cardio burst', difficulty: 'medium', durationMinutes: 30, tags: ['cardio', 'warmup'] },
+    { name: 'Core Strength Builder', description: 'Focused abs and stability', difficulty: 'hard', durationMinutes: 45, tags: ['strength', 'core'] },
+    { name: 'Recovery Stretch Flow', description: 'Gentle mobility and stretch', difficulty: 'easy', durationMinutes: 20, tags: ['stretch', 'mobility'] },
   ]);
 
-  const activities = await Activity.create([
-    { userId: users[0]._id, type: 'Running', durationMinutes: 34, caloriesBurned: 410, date: new Date() },
-    { userId: users[1]._id, type: 'Cycling', durationMinutes: 52, caloriesBurned: 650, date: new Date() },
-    { userId: users[0]._id, type: 'Yoga', durationMinutes: 28, caloriesBurned: 180, date: new Date() },
-    { userId: users[2]._id, type: 'Strength', durationMinutes: 40, caloriesBurned: 520, date: new Date() },
+  await Activity.insertMany([
+    { userId: users[0]._id.toString(), type: 'Running', durationMinutes: 50, caloriesBurned: 410, date: new Date() },
+    { userId: users[1]._id.toString(), type: 'Cycling', durationMinutes: 70, caloriesBurned: 650, date: new Date() },
+    { userId: users[2]._id.toString(), type: 'Yoga', durationMinutes: 40, caloriesBurned: 180, date: new Date() },
+    { userId: users[0]._id.toString(), type: 'Strength', durationMinutes: 55, caloriesBurned: 520, date: new Date() },
   ]);
 
-  await Leaderboard.create([
-    { userId: users[0]._id, score: 1420, rank: 1 },
-    { userId: users[1]._id, score: 1285, rank: 2 },
-    { userId: users[2]._id, score: 1110, rank: 3 },
+  await Leaderboard.insertMany([
+    { userId: users[0]._id.toString(), score: 1420, rank: 1 },
+    { userId: users[1]._id.toString(), score: 1285, rank: 2 },
+    { userId: users[2]._id.toString(), score: 1110, rank: 3 },
   ]);
 
-  console.log('Seed data created:', { users: users.length, teams: teams.length, activities: activities.length });
+  console.log('Seeded octofit_db with test data');
   await mongoose.disconnect();
-  console.log('Disconnected from MongoDB after seeding');
 }
 
-seed().catch((error) => {
-  console.error('Seed script failed', error);
+seedDatabase().then(() => process.exit(0)).catch(err => {
+  console.error(err);
   process.exit(1);
 });

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import Leaderboard from '../models/Leaderboard.js';
+import Leaderboard from '../models/Leaderboard.ts';
 
 const router = Router();
 
