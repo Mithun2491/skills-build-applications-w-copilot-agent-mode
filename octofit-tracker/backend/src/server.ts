@@ -33,7 +33,7 @@ async function startServer() {
     const codespaceName = process.env.CODESPACE_NAME;
     const host = '0.0.0.0';
     const localUrl = `http://localhost:${PORT}`;
-    const codespacesUrl = codespaceName ? `https://${codespaceName}-${PORT}.app.github.dev` : null;
+    const codespacesUrl = codespaceName ? `https://${codespaceName}-8000.app.github.dev` : null;
 
     app.listen(PORT, host, () => {
       console.log(`Backend listening on ${localUrl}`);
