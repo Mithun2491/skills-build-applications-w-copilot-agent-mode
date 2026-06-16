@@ -1,23 +1,8 @@
 import mongoose from 'mongoose';
 
-const MONGO_HOST = 'localhost';
-const MONGO_PORT = 27017;
-const MONGO_DB = 'octofit_db';
-
-export const MONGO_URI = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}`;
-
-const mongooseOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+const connectDatabase = async () => {
+  await mongoose.connect('mongodb://localhost:27017/octofit_db');
 };
 
-export async function connectDatabase() {
-  return mongoose.connect(MONGO_URI, mongooseOptions);
-}
-
-export async function disconnectDatabase() {
-  return mongoose.disconnect();
-}
-
+export default connectDatabase;
 export { mongoose };
-export default mongoose;
