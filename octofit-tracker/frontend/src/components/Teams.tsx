@@ -1,5 +1,7 @@
 import ResourceList from './ResourceList'
 
+// API Endpoint: https://${VITE_CODESPACE_NAME}-8000.app.github.dev/api/teams
+
 interface TeamsProps {
   apiBaseUrl: string
 }
