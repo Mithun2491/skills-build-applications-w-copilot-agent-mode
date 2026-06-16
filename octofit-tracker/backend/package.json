@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-esm --transpile-only src/index.ts",
+    "dev": "ts-node-esm --transpile-only src/server.ts",
     "seed": "ts-node-esm --transpile-only src/scripts/seed.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
