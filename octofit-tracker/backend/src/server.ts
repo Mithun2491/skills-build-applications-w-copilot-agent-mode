@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import connectDatabase from './config/database.ts';
 import usersRouter from './routes/users.ts';
 import teamsRouter from './routes/teams.ts';
@@ -9,6 +10,7 @@ import leaderboardRouter from './routes/leaderboard.ts';
 const app = express();
 const PORT = Number(process.env.PORT || 8000);
 
+app.use(cors());
 app.use(express.json());
 app.use('/api/users', usersRouter);
 app.use('/api/teams', teamsRouter);
