@@ -1,5 +1,5 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import { connectDatabase } from './database.js';
 import usersRouter from './routes/users.js';
 import teamsRouter from './routes/teams.js';
 import activitiesRouter from './routes/activities.js';
@@ -8,7 +8,6 @@ import leaderboardRouter from './routes/leaderboard.js';
 
 const app = express();
 const PORT = Number(process.env.PORT || 8000);
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
 
 app.use(express.json());
 app.use('/api/users', usersRouter);
@@ -28,8 +27,8 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
 
 async function startServer() {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log('MongoDB connected:', MONGO_URI);
+    await connectDatabase();
+    console.log('MongoDB connected.');
     app.listen(PORT, () => {
       console.log(`Backend listening on http://localhost:${PORT}`);
     });

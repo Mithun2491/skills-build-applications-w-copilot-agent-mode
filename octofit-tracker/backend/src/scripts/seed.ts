@@ -1,12 +1,15 @@
 import mongoose from 'mongoose';
-import User from './models/User.js';
-import Team from './models/Team.js';
-import Activity from './models/Activity.js';
-import Workout from './models/Workout.js';
-import Leaderboard from './models/Leaderboard.js';
+import User from '../models/User.js';
+import Team from '../models/Team.js';
+import Activity from '../models/Activity.js';
+import Workout from '../models/Workout.js';
+import Leaderboard from '../models/Leaderboard.js';
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
 
+/**
+ * Seed the octofit_db database with test data.
+ */
 async function seed() {
   await mongoose.connect(MONGO_URI);
   console.log('Connected to MongoDB for seeding:', MONGO_URI);
